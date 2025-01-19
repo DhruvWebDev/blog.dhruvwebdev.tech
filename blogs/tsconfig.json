@@ -19,9 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["blog/src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["blog/node_modules"]
+  "exclude": ["node_modules"]
 }
