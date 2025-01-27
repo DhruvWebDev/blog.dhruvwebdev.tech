@@ -18,46 +18,6 @@ export async function getPageContent(pageId: string): Promise<string> {
   }
 }
 
-export async function getSubPagesWithContent(blockId: string, depth: number = 0): Promise<SubPage[]> {
-  // Limit recursion depth to prevent infinite loops
-  if (depth > 3) return [];
-  
-  const subPages: SubPage[] = [];
-  
-  try {
-    const { results } = await notion.blocks.children.list({
-      block_id: blockId,
-    });
-
-    for (const block of results) {
-      if (block.type === 'child_page') {
-        const pageInfo = await notion.pages.retrieve({
-          page_id: block.id
-        });
-
-        // Get the content for this sub-page
-        const content = await getPageContent(block.id);
-        
-        // Recursively get child pages
-        const children = await getSubPagesWithContent(block.id, depth + 1);
-
-        subPages.push({
-          id: block.id,
-          title: pageInfo.properties.title?.title?.[0]?.plain_text || 'Untitled',
-          url: `/blogs/${block.id}`,
-          content: content,
-          children: children
-        });
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching sub-pages:', error);
-  }
-
-  return subPages;
-}
-
-
 export const products = [
   {
     title: "Moonbeam",

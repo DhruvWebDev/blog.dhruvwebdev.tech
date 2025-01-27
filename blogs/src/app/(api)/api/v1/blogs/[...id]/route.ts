@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { notion } from '../../../../../lib/notion/client';
 import { NotionRenderer } from '@notion-render/client';
-import { getPageContent, getSubPagesWithContent } from '@/lib/utils';
+import { getPageContent } from '@/lib/utils';
 
 const renderer = new NotionRenderer({ client: notion });
 
@@ -21,16 +21,7 @@ export async function GET(req: NextApiRequest, { params }: { params: { id: strin
     // Get main page content
     const mainContent = await getPageContent(id);
 
-    // Get sub-pages with their content
-    const subPages = await getSubPagesWithContent(id);
-
-    // Create a complete response
-    const response = {
-      content: mainContent,
-      subPages: subPages,
-    };
-
-    return new Response(JSON.stringify(response), {
+    return new Response(mainContent, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
@@ -41,5 +32,3 @@ export async function GET(req: NextApiRequest, { params }: { params: { id: strin
     return new Response('Internal Server Error', { status: 500 });
   }
 }
-
-// Ex

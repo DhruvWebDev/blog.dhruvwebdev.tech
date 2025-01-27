@@ -10,10 +10,11 @@ export async function GET(req: NextApiRequest) {
       database_id: databaseId as string,
     });
 
-    console.log(response);
+    const htmlContent = await renderer.render(...results);
+    console.log(htmlContent);
 
     // Return the sorted pages to the client using NextResponse
-    return NextResponse.json(response.results, { status: 200 });
+    return NextResponse.json(htmlContent, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
