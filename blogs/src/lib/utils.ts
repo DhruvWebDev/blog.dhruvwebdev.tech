@@ -1,11 +1,19 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { notion } from "./notion/client";
+import { NotionRenderer } from '@notion-render/client';
+import hljsPlugin from '@notion-render/hljs-plugin';
+import bookmarkPlugin from '@notion-render/bookmark-plugin';
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export async function getPageContent(pageId: string): Promise<string> {
+  const renderer = new NotionRenderer();
+  renderer.use(hljsPlugin({}));
+  renderer.use(bookmarkPlugin(undefined)); 
   try {
     const { results } = await notion.blocks.children.list({
       block_id: pageId,

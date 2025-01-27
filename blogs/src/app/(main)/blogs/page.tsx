@@ -1,19 +1,21 @@
-
+'use client'
 import { useEffect, useState } from 'react';
 
 const BlogsPage = () => {
-  const [htmlContent, setHtmlContent] = useState('');
+  const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch('/api/v1/blogs');
-        if (!response.ok) {
+        const response1 = await fetch('/api/v1/blogs');
+        if (!response1.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        setHtmlContent(response);
+        const data = await response1.json();
+        setResponse(data);
+        console.log(response)
       } catch (err) {
         setError(err.message);
       } finally {
@@ -27,7 +29,7 @@ const BlogsPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  return <div>${response}</div>;
 };
 
 export default BlogsPage;

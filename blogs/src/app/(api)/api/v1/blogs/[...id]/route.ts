@@ -1,27 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { notion } from '../../../../../lib/notion/client';
-import { NotionRenderer } from '@notion-render/client';
+'use server'
+import { NextRequest } from 'next/server';
 import { getPageContent } from '@/lib/utils';
 
-const renderer = new NotionRenderer({ client: notion });
-
-interface SubPage {
-  id: string;
-  title: string;
-  url: string;
-  content: string;
-  children: SubPage[];
-}
-
-
-export async function GET(req: NextApiRequest, { params }: { params: { id: string } }) {
+// For [...id] route
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = params;
-
-    // Get main page content
-    const mainContent = await getPageContent(id);
-
-    return new Response(mainContent, {
+    const blogId = params?.id;
+    console.log(params.id)  // No need to await params.id
+    
+    // Fetch the main content using the blogId
+    const mainContent = await getPageContent(blogId);
+    // console.log('Main Content:', JSON.stringify(mainContent));
+    // Stringify the mainContent before returning
+    return new Response(JSON.stringify(mainContent), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
-import { cn } from "@/lib/utils";
 import { ModeToggle } from "./ui/mode-toggle";
-
+import { cn } from "@/lib/utils";
 export function NavbarDemo() {
   return (
     <div className="relative w-full flex items-center justify-center">
