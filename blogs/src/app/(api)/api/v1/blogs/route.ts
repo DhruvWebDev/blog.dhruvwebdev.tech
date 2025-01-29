@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"; // Changed from NextApiRequest
+import { NextRequest } from "next/server";
 import { notion } from "@/lib/notion/client";
 import { NextResponse } from "next/server";
 
@@ -7,20 +7,22 @@ export async function GET(req: NextRequest) {
     const databaseId = process.env.NEXT_DATABASE_URL;
 
     if (!databaseId) {
-      throw new Error("Database ID is not configured");
+      return NextResponse.json(
+        { error: "Database ID is not configured" },
+        { status: 400 }
+      );
     }
 
     const response = await notion.databases.query({
       database_id: databaseId,
     });
+    
 
     const parseResponse = response.results.map((p: any) => {
       try {
         const { id, properties, icon, cover, created_time } = p;
         
-        // Safely access nested properties with null checks
         return {
-          redirectUrl: `/${id}`,
           id,
           icon: icon?.emoji || null,
           cover: cover?.external?.url || cover?.file?.url || null,
@@ -31,10 +33,8 @@ export async function GET(req: NextRequest) {
         };
       } catch (err) {
         console.error('Error parsing page:', err);
-        // Return a default object if parsing fails for a specific item
         return {
-          redirectUrl: id,
-          id,
+          id: 'error',
           icon: null,
           cover: null,
           created_time: null,
@@ -44,11 +44,10 @@ export async function GET(req: NextRequest) {
         };
       }
     });
-
-    console.log(parseResponse);
-    return new Response(JSON.stringify(parseResponse), {
-      status: 200
-    })
+    return NextResponse.json(
+      { data: parseResponse },
+      { status: 200 }
+    );
 
   } catch (error) {
     console.error('Failed to fetch from Notion:', error);
