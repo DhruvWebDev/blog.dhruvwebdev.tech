@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+"use client"
+import { cn } from "@/lib/utils"
 import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {
   AnimatePresence,
